@@ -13,3 +13,10 @@ mounts:
   "/run": "shared:files/run"
 
 disk: 512
+
+relationships:
+    database: "featuresdb:mongodb"
+
+variables:
+  env:
+    PLATFORMSH_ENV: true
