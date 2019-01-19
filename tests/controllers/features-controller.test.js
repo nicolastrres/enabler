@@ -60,7 +60,7 @@ describe('Features controller', () => {
     describe('with success', () => {
       before(async () => {
         stub(featuresRepository, 'getFeature').withArgs('feature1').resolves({ name: 'feature1', enabled: true })
-        actualFeature = await getFeature({featureName: 'feature1'})
+        actualFeature = await getFeature({ params: { featureName: 'feature1' } })
       })
 
       after(() => {

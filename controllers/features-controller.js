@@ -1,7 +1,7 @@
 
 const featuresRepository = require('../repositories/features-repository')
 const { isEmpty, partial, set } = require('lodash')
-const { merge } = require('lodash/fp')
+const { get, merge } = require('lodash/fp')
 const HttpStatus = require('http-status-codes')
 
 const addStatusCode = merge({ statusCode: HttpStatus.OK })
@@ -27,8 +27,9 @@ const throwMissingFeatureName = () => {
 
 const validateFeatureName = (featureName) => !isEmpty(featureName) ? featureName : throwMissingFeatureName()
 
-const getFeature = ({featureName}) => {
-  return Promise.resolve(featureName)
+const getFeature = (req) => {
+  return Promise.resolve(req)
+    .then(get('params.featureName'))
     .then(validateFeatureName)
     .then(featuresRepository.getFeature)
     .then(wrapInDataObject)
