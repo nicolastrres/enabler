@@ -7,7 +7,7 @@ dependencies:
 
 web:
   commands:
-    start: "PM2_HOME=$PLATFORM_APP_DIR/run pm2 start index.js --no-daemon"
+    start: "PM2_HOME=$PLATFORM_APP_DIR/run pm2 start bin/www --no-daemon"
 
 mounts:
   "/run": "shared:files/run"
