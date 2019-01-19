@@ -48,7 +48,7 @@ describe('Features controller', () => {
         featuresRepository.getAllFeatures.restore()
       })
 
-      it('returns server error status codewn', () => {
+      it('returns server error status code', () => {
         expect(allFeatures).to.have.property('statusCode').and.to.be.equal(500)
       })
     })
@@ -86,9 +86,17 @@ describe('Features controller', () => {
         featuresRepository.getFeature.restore()
       })
 
-      it('returns server error status codewn', () => {
+      it('returns server error status code', () => {
         expect(actualFeature.statusCode).to.be.equal(500)
       })
     })
+
+    describe('when featureName is not provided', () => {
+      it('returns server error status code', async () => {
+        const actualError = await getFeature()
+        expect(actualError.statusCode).to.be.equal(500)
+      })
+    })
+
   })
 })
