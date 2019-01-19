@@ -1,10 +1,12 @@
 
 const featuresRepository = require('../repositories/features-repository')
 const { isEmpty, partial, set } = require('lodash')
-const { get, merge } = require('lodash/fp')
+const { get, merge, pick } = require('lodash/fp')
 const HttpStatus = require('http-status-codes')
 
-const addStatusCode = merge({ statusCode: HttpStatus.OK })
+const addStatusCode = (statusCode) => merge({ statusCode })
+const addSuccessCode = addStatusCode(HttpStatus.OK)
+const addCreatedCode = addStatusCode(HttpStatus.CREATED)
 
 const wrapInDataObject = partial(set, {}, 'data')
 
@@ -17,7 +19,17 @@ const handleError = (error) => {
 const getAllFeatures = () => {
   return featuresRepository.getAllFeatures()
     .then(wrapInDataObject)
-    .then(addStatusCode)
+    .then(addSuccessCode)
+    .catch(handleError)
+}
+
+const createFeatures = (req) => { // TODO: validate request
+  return Promise.resolve(req)
+    .then(pick(['body']))
+    .then(pick(['name', 'enabled']))
+    .then(featuresRepository.createFeatures)
+    .then(wrapInDataObject)
+    .then(addCreatedCode)
     .catch(handleError)
 }
 
@@ -33,8 +45,8 @@ const getFeature = (req) => {
     .then(validateFeatureName)
     .then(featuresRepository.getFeature)
     .then(wrapInDataObject)
-    .then(addStatusCode)
+    .then(addSuccessCode)
     .catch(handleError)
 }
 
-module.exports = { getAllFeatures, getFeature }
+module.exports = { createFeatures, getAllFeatures, getFeature }

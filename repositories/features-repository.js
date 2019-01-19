@@ -4,4 +4,6 @@ const getAllFeatures = () => databaseClient.getAll('features')
 
 const getFeature = (featureName) => databaseClient.get('features', { name: featureName })
 
-module.exports = { getAllFeatures, getFeature }
+const createFeatures = () => {}
+
+module.exports = { createFeatures, getAllFeatures, getFeature }

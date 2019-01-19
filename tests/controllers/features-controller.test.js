@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const { stub } = require('sinon')
 
 const featuresRepository = require('../../repositories/features-repository')
-const { getAllFeatures, getFeature } = require('../../controllers/features-controller')
+const { createFeatures, getAllFeatures, getFeature } = require('../../controllers/features-controller')
 
 
 describe('Features controller', () => {
@@ -50,6 +50,50 @@ describe('Features controller', () => {
 
       it('returns server error status code', () => {
         expect(allFeatures).to.have.property('statusCode').and.to.be.equal(500)
+      })
+    })
+  })
+
+  describe('creates features', () => {
+    let featuresCreated
+
+    describe('with success', () => {
+      let features = [
+        { name: 'feature1', enabled: true },
+        { name: 'feature2', enabled: false }
+      ]
+
+      before(async () => {
+        stub(featuresRepository, 'createFeatures').resolves(features)
+
+        featuresCreated = await createFeatures(features)
+      })
+
+      after(() => {
+        featuresRepository.createFeatures.restore()
+      })
+
+      it('returns all features created', () => {
+        expect(featuresCreated.data).to.be.deep.equal(features)
+      })
+
+      it('returns success status code', async () => {
+        expect(featuresCreated.statusCode).to.be.equal(201)
+      })
+    })
+
+    describe('when error is thrown', () => {
+      before(async () => {
+        stub(featuresRepository, 'createFeatures').rejects('Error')
+        featuresCreated = await createFeatures()
+      })
+
+      after(() => {
+        featuresRepository.createFeatures.restore()
+      })
+
+      it('returns server error status code', () => {
+        expect(featuresCreated.statusCode).to.be.equal(500)
       })
     })
   })

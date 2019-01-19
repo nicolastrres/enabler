@@ -11,6 +11,8 @@ const handle = (handlerFn) => {
 
 router.get('/', handle(featuresController.getAllFeatures))
 router.get('/features', handle(featuresController.getAllFeatures))
+router.post('/features', handle(featuresController.createFeatures))
+
 router.get('/features/:featureName', handle(featuresController.getFeature))
 
 module.exports = router
