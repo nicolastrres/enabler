@@ -1,26 +1,27 @@
 const MongoClient = require('mongodb').MongoClient
-const { stub } = require('sinon')
+const { stub, spy } = require('sinon')
 const { expect } = require('chai')
+const databaseClient = require('../../database/client')
+
+const featuresFound = { toArray: () => [ { name: 'feature1', enabled: false } ] }
+const featuresCollectionStub = { find: () => featuresFound}
+const dbStub = { collection: (collectionName) => collectionName === 'features' ? featuresCollectionStub : null }
+const clientStub = { close: spy(), db: () => dbStub }
 
 describe('Database tests', () => {
-  let databaseClient
-
   before(() => {
-    const featuresFound = { toArray: () => [ { name: 'feature1', enabled: false } ] }
-    const featuresCollectionStub = { find: () => featuresFound}
-    const dbStub = { collection: (collectionName) => collectionName === 'features' ? featuresCollectionStub : null }
-
-    stub(MongoClient.prototype, 'connect')
-    stub(MongoClient.prototype, 'db').returns(dbStub)
-    databaseClient = require('../../database/client')
+    stub(MongoClient.prototype, 'connect').returns(clientStub)
   })
 
   after(() => {
     MongoClient.prototype.connect.restore()
-    MongoClient.prototype.db.restore()
   })
 
   it('gets all features', async () => {
     expect(await databaseClient.getAll('features')).to.be.deep.equal([{ name: 'feature1', enabled: false }])
+  })
+
+  it('closes db connection', async () => {
+    expect(clientStub.close.calledOnce).to.be.equal(true)
   })
 })

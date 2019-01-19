@@ -2,11 +2,11 @@ const express = require('express')
 const router = express.Router()
 const featuresController = require('../controllers/features-controller')
 
-const handleGetFeatures = async (req, res) => {
-  const { status, data } = await featuresController.getFeatures()
-  res.status(status).json(data)
+const handleGetAllFeatures = async (req, res) => {
+  const { statusCode, data } = await featuresController.getAllFeatures()
+  res.status(statusCode).json(data)
 }
 
-router.get('/', handleGetFeatures)
+router.get('/', handleGetAllFeatures)
 
 module.exports = router

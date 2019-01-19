@@ -1,24 +1,20 @@
 const MongoClient = require('mongodb').MongoClient
-const { DB_URL, DB_NAME } = require('constants')
-const { isNil } = require('lodash')
+const { DB_URL, DB_NAME } = require('../constants')
 
-let client
 
 const connect = () => {
-  client = new MongoClient(DB_URL)
-  client.connect()
-}
-
-const getDb = () => {
-  if (isNil(client)) connect()
-  return client.db(DB_NAME)
+  return MongoClient.connect(DB_URL, { useNewUrlParser: true })
 }
 
 const getAll = async (collectionName) => {
-  const db = await getDb()
-  const collection = db.collection(collectionName)
-
-  return collection.find({}).toArray()
+  let client
+  try {
+    client = await connect()
+    return client.db(DB_NAME).collection(collectionName).find({}).toArray()
+  } catch (e) {
+    throw e
+  } finally  {
+    client.close()
+  }
 }
-
 module.exports = { getAll }
