@@ -3,8 +3,12 @@ const { stub, spy } = require('sinon')
 const { expect } = require('chai')
 const databaseClient = require('../../database/client')
 
-const featuresFound = { toArray: () => [ { name: 'feature1', enabled: false } ] }
-const featuresCollectionStub = { find: () => featuresFound}
+const feature = { name: 'feature1', enabled: false }
+const featuresFound = { toArray: () => [feature] }
+const featuresCollectionStub = {
+  find: () => featuresFound,
+  findOne: () => feature
+}
 const dbStub = { collection: (collectionName) => collectionName === 'features' ? featuresCollectionStub : null }
 const clientStub = { close: spy(), db: () => dbStub }
 
@@ -23,5 +27,9 @@ describe('Database tests', () => {
 
   it('closes db connection', async () => {
     expect(clientStub.close.calledOnce).to.be.equal(true)
+  })
+
+  it('get a single feature', async () => {
+    expect(await databaseClient.get('features', { name: 'feature1' })).to.be.deep.equal({ name: 'feature1', enabled: false })
   })
 })

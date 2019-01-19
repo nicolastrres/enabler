@@ -60,7 +60,7 @@ describe('Features controller', () => {
     describe('with success', () => {
       before(async () => {
         stub(featuresRepository, 'getFeature').withArgs('feature1').resolves({ name: 'feature1', enabled: true })
-        actualFeature = await getFeature('feature1')
+        actualFeature = await getFeature({featureName: 'feature1'})
       })
 
       after(() => {
@@ -93,7 +93,7 @@ describe('Features controller', () => {
 
     describe('when featureName is not provided', () => {
       it('returns server error status code', async () => {
-        const actualError = await getFeature()
+        const actualError = await getFeature({})
         expect(actualError.statusCode).to.be.equal(500)
       })
     })

@@ -17,4 +17,17 @@ const getAll = async (collectionName) => {
     client.close()
   }
 }
-module.exports = { getAll }
+
+const get = async (collectionName, query) => {
+  let client
+  try {
+    client = await connect()
+    return client.db(DB_NAME).collection(collectionName).findOne(query)
+  } catch (e) {
+    throw e
+  } finally  {
+    client.close()
+  }
+}
+
+module.exports = { get, getAll }

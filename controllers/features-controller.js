@@ -27,7 +27,7 @@ const throwMissingFeatureName = () => {
 
 const validateFeatureName = (featureName) => !isEmpty(featureName) ? featureName : throwMissingFeatureName()
 
-const getFeature = (featureName) => {
+const getFeature = ({featureName}) => {
   return Promise.resolve(featureName)
     .then(validateFeatureName)
     .then(featuresRepository.getFeature)
