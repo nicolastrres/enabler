@@ -1,7 +1,4 @@
-const chai = require('chai')
-const chaiAsPromised = require('chai-as-promised')
-chai.use(chaiAsPromised)
-const expect = chai.expect
+const { expect } = require('chai')
 const { stub } = require('sinon')
 
 const featuresRepository = require('../../repositories/features-repository')
@@ -22,15 +19,15 @@ describe('Features controller', () => {
         featuresRepository.getFeatures.restore()
       })
 
-      it('returns all features', () => {
-        return expect(getFeatures()).to.eventually.have.property('data').and.to.be.deep.equal({
+      it('returns all features', async () => {
+        expect(await getFeatures()).to.have.property('data').and.to.be.deep.equal({
           feature1: true,
           feature2: true
         })
       })
 
-      it('returns success status code', () => {
-        return expect(getFeatures()).to.eventually.have.property('statusCode').and.to.be.equal(200)
+      it('returns success status code', async () => {
+        expect(await getFeatures()).to.have.property('statusCode').and.to.be.equal(200)
       })
     })
 
@@ -40,8 +37,8 @@ describe('Features controller', () => {
         stub(console, 'error')
       })
 
-      it('returns server error status codewn', () => {
-        return expect(getFeatures()).to.eventually.have.property('statusCode').and.to.be.equal(500)
+      it('returns server error status codewn', async () => {
+        expect(await getFeatures()).to.have.property('statusCode').and.to.be.equal(500)
       })
     })
   })
