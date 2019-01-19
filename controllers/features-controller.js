@@ -6,7 +6,7 @@ const HttpStatus = require('http-status-codes')
 
 const addStatusCode = merge({ statusCode: HttpStatus.OK })
 
-const addData = partial(set, {}, 'data')
+const wrapInDataObject = partial(set, {}, 'data')
 
 const handleError = (error) => {
   // eslint-disable-next-line no-console
@@ -16,9 +16,16 @@ const handleError = (error) => {
 
 const getAllFeatures = () => {
   return featuresRepository.getAllFeatures()
-    .then(addData)
+    .then(wrapInDataObject)
     .then(addStatusCode)
     .catch(handleError)
 }
 
-module.exports = { getAllFeatures }
+const getFeature = (featureName) => {
+  return featuresRepository.getFeature(featureName)
+    .then(wrapInDataObject)
+    .then(addStatusCode)
+    .catch(handleError)
+}
+
+module.exports = { getAllFeatures, getFeature }
