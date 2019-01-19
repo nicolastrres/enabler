@@ -7,12 +7,14 @@
 const app = require('../app')
 const debug = require('debug')('enabler:server')
 const http = require('http')
+const config = require('platformsh').config()
 
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || '3000')
+
+const port = config.port || '3000'
 app.set('port', port)
 
 /**

@@ -1,0 +1,15 @@
+name: node
+type: nodejs:10
+
+dependencies:
+  nodejs:
+    pm2: "^2.0.0"
+
+web:
+  commands:
+    start: "PM2_HOME=$PLATFORM_APP_DIR/run pm2 start index.js --no-daemon"
+
+mounts:
+  "/run": "shared:files/run"
+
+disk: 512
