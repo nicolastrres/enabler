@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "lint": "eslint \"**/*.js\"",
+    "pretest": "yarn lint",
     "test": "mocha tests/**/*.test.js"
   },
   "dependencies": {

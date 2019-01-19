@@ -1,6 +1,5 @@
+const databaseClient = require('../database/client')
 
-const getFeatures = () => {
+const getAllFeatures = () => databaseClient.getAll()
 
-}
-
-module.exports = { getFeatures }
+module.exports = { getAllFeatures }

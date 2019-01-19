@@ -14,11 +14,11 @@ const handleError = (error) => {
   return { statusCode: HttpStatus.INTERNAL_SERVER_ERROR }
 }
 
-const getFeatures = () => {
-  return featuresRepository.getFeatures()
+const getAllFeatures = () => {
+  return featuresRepository.getAllFeatures()
     .then(addData)
     .then(addStatusCode)
     .catch(handleError)
 }
 
-module.exports = { getFeatures }
+module.exports = { getAllFeatures }
