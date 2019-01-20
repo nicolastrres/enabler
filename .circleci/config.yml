@@ -1,0 +1,37 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: docker:stable
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build and publish docker image to docker hub
+          command: .circleci/build.sh
+  lint:
+    docker:
+      - image: nicolastrres/enabler:${CIRCLE_SHA1}
+    working_directory: /enabler
+    steps:
+      - run:
+          command: yarn lint
+  tests:
+    docker:
+      - image: nicolastrres/enabler:${CIRCLE_SHA1}
+    working_directory: /enabler
+    steps:
+      - run:
+          command: yarn test
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - lint:
+          requires:
+            - build
+      - tests:
+          requires:
+            - build
