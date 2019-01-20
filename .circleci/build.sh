@@ -1,5 +1,6 @@
 set -e
 
-docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+
 docker build . -t nicolastrres/enabler:${CIRCLE_SHA1}
 docker push nicolastrres/enabler
