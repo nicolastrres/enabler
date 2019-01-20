@@ -7,17 +7,17 @@ describe('Features repository test', () => {
   before(() => {
     stub(databaseClient, 'getAll')
       .withArgs('features')
-      .resolves([{ name: 'feature1', enabled: false }])
+      .resolves([{ name: 'feature1', enabled: false, _id: '1' }])
 
     stub(databaseClient, 'get')
       .withArgs('features', { name: 'feature1' })
-      .resolves({ name: 'feature1', enabled: false })
+      .resolves({ name: 'feature1', enabled: false, _id: '1' })
 
     stub(databaseClient, 'create').resolves({
       result: { ok: 1, n: 2 },
       ops: [
-        { name: 'feature1', enabled: false, _id: '0' },
-        { name: 'feature2', enabled: true, _id: '1' }
+        { name: 'feature1', enabled: false, _id: '1' },
+        { name: 'feature2', enabled: true, _id: '2' }
       ]
     })
   })
