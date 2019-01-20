@@ -13,6 +13,10 @@ describe('Features repository test', () => {
       .withArgs('features', { name: 'feature1' })
       .resolves({ name: 'feature1', enabled: false, _id: '1' })
 
+    stub(databaseClient, 'del')
+      .withArgs('features', { name: 'feature1' })
+      .resolves('feature deleted')
+
     stub(databaseClient, 'create').resolves({
       result: { ok: 1, n: 2 },
       ops: [
@@ -49,5 +53,11 @@ describe('Features repository test', () => {
     const response = await featuresRepository.createFeatures(features)
 
     expect(response).to.be.deep.equal(features)
+  })
+
+  it('deletes feature', async () => {
+    const response = await featuresRepository.deleteFeature('feature1')
+
+    expect(response).to.be.deep.equal('feature deleted')
   })
 })

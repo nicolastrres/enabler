@@ -21,9 +21,9 @@ const createFeatures = features => {
     .then(getFeaturesData)
 }
 
-// eslint-disable-next-line no-unused-vars
 const deleteFeature = featureName => {
-
+  return databaseClient
+    .del('features', { name: featureName })
 }
 
 module.exports = { createFeatures, deleteFeature, getAllFeatures, getFeature }

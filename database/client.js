@@ -27,6 +27,13 @@ const executableCreate = async (client, collectionName, query) => {
     .insertMany(query)
 }
 
+const executableDelete = async (client, collectionName, query) => {
+  return client
+    .db(DB_NAME)
+    .collection(collectionName)
+    .deleteOne(query)
+}
+
 const getAll = (collectionName, query) => {
   return execute(executableGetAll, collectionName, query)
 }
@@ -37,6 +44,10 @@ const get = (collectionName, query) => {
 
 const create = (collectionName, query) => {
   return execute(executableCreate, collectionName, query)
+}
+
+const del = (collectionName, query) => {
+  return execute(executableDelete, collectionName, query)
 }
 
 const execute = async (fn, collectionName, query) => {
@@ -51,4 +62,4 @@ const execute = async (fn, collectionName, query) => {
   }
 }
 
-module.exports = { create, get, getAll }
+module.exports = { create, del, get, getAll }

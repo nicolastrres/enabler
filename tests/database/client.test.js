@@ -12,10 +12,15 @@ insertManyStub.withArgs('feature1').returns({ result: { ok: 1 } })
 const findOneStub = stub()
 findOneStub.withArgs('feature1').returns(feature1)
 
+const deleteOneStub = stub()
+deleteOneStub.withArgs('feature1').returns('feature deleted')
+
+
 const featuresCollectionStub = {
   find: () => featuresFound,
   findOne: findOneStub,
-  insertMany: insertManyStub
+  insertMany: insertManyStub,
+  deleteOne: deleteOneStub
 }
 
 const collectionStub = stub()
@@ -45,6 +50,12 @@ describe('Database tests', () => {
   it('get a single feature', async () => {
     const actualFeature = await databaseClient.get('features', 'feature1')
     expect(actualFeature).to.be.deep.equal(feature1)
+  })
+
+  it('deletes a single feature', async () => {
+    const deleted = await databaseClient.del('features', 'feature1')
+
+    expect(deleted).to.be.equal('feature deleted')
   })
 
   it('creates many features', async () => {
