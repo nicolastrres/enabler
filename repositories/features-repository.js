@@ -21,4 +21,9 @@ const createFeatures = features => {
     .then(getFeaturesData)
 }
 
-module.exports = { createFeatures, getAllFeatures, getFeature }
+// eslint-disable-next-line no-unused-vars
+const deleteFeature = featureName => {
+
+}
+
+module.exports = { createFeatures, deleteFeature, getAllFeatures, getFeature }

@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const { stub } = require('sinon')
 
 const featuresRepository = require('../../repositories/features-repository')
-const { createFeatures, getAllFeatures, getFeature } = require('../../controllers/features-controller')
+const { createFeatures, deleteFeature, getAllFeatures, getFeature } = require('../../controllers/features-controller')
 
 describe('Features controller', () => {
   before(() => {
@@ -133,7 +133,7 @@ describe('Features controller', () => {
         stub(featuresRepository, 'getFeature')
           .withArgs('feature1')
           .rejects('Error')
-        response = await getFeature('feature1')
+        response = await getFeature({ params: { featureName: 'feature1' } })
       })
 
       after(() => {
@@ -148,6 +148,51 @@ describe('Features controller', () => {
     describe('when featureName is not provided', () => {
       it('returns server error status code', async () => {
         const response = await getFeature({})
+        expect(response.statusCode).to.be.equal(500)
+      })
+    })
+  })
+
+  describe('delete feature', () => {
+    let response
+
+    describe('with success', () => {
+      before(async () => {
+        stub(featuresRepository, 'deleteFeature')
+          .withArgs('feature1')
+
+        response = await deleteFeature({ params: { featureName: 'feature1' } })
+      })
+
+      after(() => {
+        featuresRepository.deleteFeature.restore()
+      })
+
+      it('returns no content status code', () => {
+        expect(response.statusCode).to.be.equal(204)
+      })
+    })
+
+    describe('when error is thrown', () => {
+      before(async () => {
+        stub(featuresRepository, 'deleteFeature')
+          .withArgs('feature1')
+          .rejects('Error')
+        response = await deleteFeature({ params: { featureName: 'feature1' } })
+      })
+
+      after(() => {
+        featuresRepository.deleteFeature.restore()
+      })
+
+      it('returns server error status code', () => {
+        expect(response.statusCode).to.be.equal(500)
+      })
+    })
+
+    describe('when featureName is not provided', () => {
+      it('returns server error status code', async () => {
+        const response = await deleteFeature({})
         expect(response.statusCode).to.be.equal(500)
       })
     })

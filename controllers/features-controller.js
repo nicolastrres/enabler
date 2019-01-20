@@ -6,6 +6,8 @@ const HttpStatus = require('http-status-codes')
 const addStatusCode = statusCode => merge({ statusCode })
 const addSuccessCode = addStatusCode(HttpStatus.OK)
 const addCreatedCode = addStatusCode(HttpStatus.CREATED)
+const addNoContentCode = addStatusCode(HttpStatus.NO_CONTENT)
+
 
 const wrapInDataObject = partial(set, {}, 'data')
 
@@ -51,4 +53,13 @@ const getFeature = req => {
     .catch(handleError)
 }
 
-module.exports = { createFeatures, getAllFeatures, getFeature }
+const deleteFeature = req => {
+  return Promise.resolve(req)
+    .then(get('params.featureName'))
+    .then(validateFeatureName)
+    .then(featuresRepository.deleteFeature)
+    .then(addNoContentCode)
+    .catch(handleError)
+}
+
+module.exports = { createFeatures, deleteFeature, getAllFeatures, getFeature }
