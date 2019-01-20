@@ -13,6 +13,7 @@ services:
       - 3000:3000
     environment:
       WAIT_HOSTS: mongodb:27017
+      DB_URL: mongodb://mongodb:27017/featuresDB
   mongodb:
     container_name: mongodb
     image: mongo:latest
