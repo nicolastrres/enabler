@@ -1,7 +1,7 @@
 
 const featuresRepository = require('../repositories/features-repository')
 const { isEmpty, partial, set } = require('lodash')
-const { get, merge, pick } = require('lodash/fp')
+const { get, map, merge, pick } = require('lodash/fp')
 const HttpStatus = require('http-status-codes')
 
 const addStatusCode = (statusCode) => merge({ statusCode })
@@ -25,8 +25,8 @@ const getAllFeatures = () => {
 
 const createFeatures = (req) => { // TODO: validate request
   return Promise.resolve(req)
-    .then(pick(['body']))
-    .then(pick(['name', 'enabled']))
+    .then(get('body'))
+    .then(map(pick(['name', 'enabled'])))
     .then(featuresRepository.createFeatures)
     .then(wrapInDataObject)
     .then(addCreatedCode)

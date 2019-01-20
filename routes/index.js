@@ -4,7 +4,7 @@ const featuresController = require('../controllers/features-controller')
 
 const handle = (handlerFn) => {
   return async (req, res) => {
-    const { statusCode, data } = await handlerFn(req.params)
+    const { statusCode, data } = await handlerFn(req)
     res.status(statusCode).json(data)
   }
 }

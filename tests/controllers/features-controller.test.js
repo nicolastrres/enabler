@@ -4,14 +4,13 @@ const { stub } = require('sinon')
 const featuresRepository = require('../../repositories/features-repository')
 const { createFeatures, getAllFeatures, getFeature } = require('../../controllers/features-controller')
 
-
 describe('Features controller', () => {
   before(() => {
     stub(console, 'error')
   })
 
   describe('get all features', () => {
-    let allFeatures
+    let response
 
     describe('with success', () => {
       before(async () => {
@@ -19,7 +18,7 @@ describe('Features controller', () => {
           { name: 'feature1', enabled: true },
           { name: 'feature2', enabled: false }
         ])
-        allFeatures = await getAllFeatures()
+        response = await getAllFeatures()
       })
 
       after(() => {
@@ -27,21 +26,21 @@ describe('Features controller', () => {
       })
 
       it('returns all features', () => {
-        expect(allFeatures.data).to.be.deep.equal([
+        expect(response.data).to.be.deep.equal([
           { name: 'feature1', enabled: true },
           { name: 'feature2', enabled: false }
         ])
       })
 
       it('returns success status code', async () => {
-        expect(allFeatures.statusCode).to.be.equal(200)
+        expect(response.statusCode).to.be.equal(200)
       })
     })
 
     describe('when error is thrown', () => {
       before(async () => {
         stub(featuresRepository, 'getAllFeatures').rejects('Error')
-        allFeatures = await getAllFeatures()
+        response = await getAllFeatures()
       })
 
       after(() => {
@@ -49,24 +48,27 @@ describe('Features controller', () => {
       })
 
       it('returns server error status code', () => {
-        expect(allFeatures).to.have.property('statusCode').and.to.be.equal(500)
+        expect(response.statusCode).to.be.equal(500)
       })
     })
   })
 
   describe('creates features', () => {
-    let featuresCreated
+    let response
 
     describe('with success', () => {
-      let features = [
+      const features = [
         { name: 'feature1', enabled: true },
         { name: 'feature2', enabled: false }
       ]
+      const request = { body: features }
 
       before(async () => {
-        stub(featuresRepository, 'createFeatures').resolves(features)
+        stub(featuresRepository, 'createFeatures')
+          .withArgs(features)
+          .resolves(features)
 
-        featuresCreated = await createFeatures(features)
+        response = await createFeatures(request)
       })
 
       after(() => {
@@ -74,18 +76,18 @@ describe('Features controller', () => {
       })
 
       it('returns all features created', () => {
-        expect(featuresCreated.data).to.be.deep.equal(features)
+        expect(response.data).to.be.deep.equal(features)
       })
 
       it('returns success status code', async () => {
-        expect(featuresCreated.statusCode).to.be.equal(201)
+        expect(response.statusCode).to.be.equal(201)
       })
     })
 
     describe('when error is thrown', () => {
       before(async () => {
         stub(featuresRepository, 'createFeatures').rejects('Error')
-        featuresCreated = await createFeatures()
+        response = await createFeatures()
       })
 
       after(() => {
@@ -93,18 +95,21 @@ describe('Features controller', () => {
       })
 
       it('returns server error status code', () => {
-        expect(featuresCreated.statusCode).to.be.equal(500)
+        expect(response.statusCode).to.be.equal(500)
       })
     })
   })
 
   describe('get feature', () => {
-    let actualFeature
+    let response
 
     describe('with success', () => {
       before(async () => {
-        stub(featuresRepository, 'getFeature').withArgs('feature1').resolves({ name: 'feature1', enabled: true })
-        actualFeature = await getFeature({ params: { featureName: 'feature1' } })
+        stub(featuresRepository, 'getFeature')
+          .withArgs('feature1')
+          .resolves({ name: 'feature1', enabled: true })
+
+        response = await getFeature({ params: { featureName: 'feature1' } })
       })
 
       after(() => {
@@ -112,18 +117,23 @@ describe('Features controller', () => {
       })
 
       it('returns feature', () => {
-        expect(actualFeature.data).to.be.deep.equal({ name: 'feature1', enabled: true })
+        expect(response.data).to.be.deep.equal({
+          name: 'feature1',
+          enabled: true
+        })
       })
 
       it('returns success status code', () => {
-        expect(actualFeature.statusCode).to.be.equal(200)
+        expect(response.statusCode).to.be.equal(200)
       })
     })
 
     describe('when error is thrown', () => {
       before(async () => {
-        stub(featuresRepository, 'getFeature').withArgs('feature1').rejects('Error')
-        actualFeature = await getFeature('feature1')
+        stub(featuresRepository, 'getFeature')
+          .withArgs('feature1')
+          .rejects('Error')
+        response = await getFeature('feature1')
       })
 
       after(() => {
@@ -131,16 +141,15 @@ describe('Features controller', () => {
       })
 
       it('returns server error status code', () => {
-        expect(actualFeature.statusCode).to.be.equal(500)
+        expect(response.statusCode).to.be.equal(500)
       })
     })
 
     describe('when featureName is not provided', () => {
       it('returns server error status code', async () => {
-        const actualError = await getFeature({})
-        expect(actualError.statusCode).to.be.equal(500)
+        const response = await getFeature({})
+        expect(response.statusCode).to.be.equal(500)
       })
     })
-
   })
 })
