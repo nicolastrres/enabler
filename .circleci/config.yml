@@ -31,7 +31,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: platform && git push platform master
+          command: platform && platform project:set-remote ${PROJECT_ID} && platform push -f -y --project ${PROJECT_ID}
 
 workflows:
   version: 2
