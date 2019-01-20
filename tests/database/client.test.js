@@ -5,11 +5,23 @@ const databaseClient = require('../../database/client')
 
 const feature = { name: 'feature1', enabled: false }
 const featuresFound = { toArray: () => [feature] }
+
+const insertManyStub = stub()
+insertManyStub.withArgs('feature1').returns({result: {ok: 1}})
+
+const findOneStub = stub()
+findOneStub.withArgs('feature1').returns(feature)
+
 const featuresCollectionStub = {
   find: () => featuresFound,
-  findOne: () => feature
+  findOne: findOneStub,
+  insertMany: insertManyStub
 }
-const dbStub = { collection: (collectionName) => collectionName === 'features' ? featuresCollectionStub : null }
+
+const collectionStub = stub()
+collectionStub.withArgs('features').returns(featuresCollectionStub)
+
+const dbStub = { collection:  collectionStub}
 const clientStub = { close: spy(), db: () => dbStub }
 
 describe('Database tests', () => {
@@ -30,6 +42,13 @@ describe('Database tests', () => {
   })
 
   it('get a single feature', async () => {
-    expect(await databaseClient.get('features', { name: 'feature1' })).to.be.deep.equal({ name: 'feature1', enabled: false })
+    expect(await databaseClient.get('features', 'feature1')).to.be.deep.equal(feature)
   })
+
+  it('creates many features', async () => {
+    const created = await databaseClient.create('features', 'feature1')
+
+    expect(created.result.ok).to.be.equal(1)
+  })
+
 })
