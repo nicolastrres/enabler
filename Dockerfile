@@ -16,6 +16,9 @@ COPY routes             $APP/routes
 COPY app.js             $APP
 COPY constants.js       $APP
 
+COPY tests              $APP/tests
+COPY .eslintrc.yml       $APP
+
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait /wait
 RUN chmod +x /wait
 
