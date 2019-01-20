@@ -1,0 +1,22 @@
+version: '2'
+services:
+  featuresService:
+    build: .
+    image: nicolastrres/enabler
+    restart: always
+    container_name: enabler
+    volumes:
+      - .:/enabler
+    depends_on:
+      - mongodb
+    ports:
+      - 3000:3000
+    environment:
+      WAIT_HOSTS: mongodb:27017
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
