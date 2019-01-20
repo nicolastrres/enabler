@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const featuresController = require('../controllers/features-controller')
 
-const handle = (handlerFn) => {
+const handle = handlerFn => {
   return async (req, res) => {
     const { statusCode, data } = await handlerFn(req)
     res.status(statusCode).json(data)

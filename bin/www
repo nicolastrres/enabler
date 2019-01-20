@@ -8,13 +8,13 @@ const app = require('../app')
 const debug = require('debug')('enabler:server')
 const http = require('http')
 const { get } = require('lodash')
-const config = process.env.PLATFORMSH_ENV ? require('platformsh').config() : null
-
+const config = process.env.PLATFORMSH_ENV
+  ? require('platformsh').config()
+  : null
 
 /**
  * Get port from environment and store in Express.
  */
-
 
 const port = get(config, 'port') || '3000'
 app.set('port', port)
@@ -42,9 +42,7 @@ function onError(error) {
     throw error
   }
 
-  const bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port
+  const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -69,8 +67,6 @@ function onError(error) {
 
 function onListening() {
   const addr = server.address()
-  const bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port
+  const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port
   debug('Listening on ' + bind)
 }

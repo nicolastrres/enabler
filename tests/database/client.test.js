@@ -3,14 +3,14 @@ const { stub, spy } = require('sinon')
 const { expect } = require('chai')
 const databaseClient = require('../../database/client')
 
-const feature = { name: 'feature1', enabled: false }
-const featuresFound = { toArray: () => [feature] }
+const feature1 = { name: 'feature1', enabled: false }
+const featuresFound = { toArray: () => [feature1] }
 
 const insertManyStub = stub()
-insertManyStub.withArgs('feature1').returns({result: {ok: 1}})
+insertManyStub.withArgs('feature1').returns({ result: { ok: 1 } })
 
 const findOneStub = stub()
-findOneStub.withArgs('feature1').returns(feature)
+findOneStub.withArgs('feature1').returns(feature1)
 
 const featuresCollectionStub = {
   find: () => featuresFound,
@@ -21,7 +21,7 @@ const featuresCollectionStub = {
 const collectionStub = stub()
 collectionStub.withArgs('features').returns(featuresCollectionStub)
 
-const dbStub = { collection:  collectionStub}
+const dbStub = { collection: collectionStub }
 const clientStub = { close: spy(), db: () => dbStub }
 
 describe('Database tests', () => {
@@ -34,7 +34,8 @@ describe('Database tests', () => {
   })
 
   it('gets all features', async () => {
-    expect(await databaseClient.getAll('features')).to.be.deep.equal([{ name: 'feature1', enabled: false }])
+    const allFeatures = await databaseClient.getAll('features')
+    expect(allFeatures).to.be.deep.equal([{ name: 'feature1', enabled: false }])
   })
 
   it('closes db connection', async () => {
@@ -42,7 +43,8 @@ describe('Database tests', () => {
   })
 
   it('get a single feature', async () => {
-    expect(await databaseClient.get('features', 'feature1')).to.be.deep.equal(feature)
+    const actualFeature = await databaseClient.get('features', 'feature1')
+    expect(actualFeature).to.be.deep.equal(feature1)
   })
 
   it('creates many features', async () => {
@@ -50,5 +52,4 @@ describe('Database tests', () => {
 
     expect(created.result.ok).to.be.equal(1)
   })
-
 })

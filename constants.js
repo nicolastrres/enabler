@@ -1,28 +1,25 @@
 const { head } = require('lodash')
 
-
 const getDbUrl = () => {
-  if (process.env.PLATFORMSH_ENV) {
-    const config = require('platformsh').config()
-    const db = head(config.relationships.database)
-    return `${db['scheme']}://${db['username']}:${db['password']}@${db['ip']}:${db['port']}/${db['path']}`
+  if (!process.env.PLATFORMSH_ENV) {
+    return 'mongodb://localhost:27017/featuresDB'
   }
 
-  return 'mongodb://localhost:27017/featuresDB'
+  const config = require('platformsh').config()
+  const db = head(config.relationships.database)
+  return `${db['scheme']}://${db['username']}:${db['password']}@${db['ip']}:${db['port']}/${db['path']}`
 }
 
 const getDbName = () => {
-  if (process.env.PLATFORMSH_ENV) {
-    const config = require('platformsh').config()
-    return head(config.relationships.database).path
+  if (!process.env.PLATFORMSH_ENV) {
+    return 'featuresDB'
   }
-  return 'featuresDB'
-}
 
+  const config = require('platformsh').config()
+  return head(config.relationships.database).path
+}
 
 const DB_URL = getDbUrl()
 const DB_NAME = getDbName()
-
-
 
 module.exports = { DB_URL, DB_NAME }

@@ -5,16 +5,14 @@ const getFeatureData = pick(['name', 'enabled'])
 const getFeaturesData = map(getFeatureData)
 
 const getAllFeatures = () => {
-  return databaseClient.getAll('features')
-    .then(getFeaturesData)
+  return databaseClient.getAll('features').then(getFeaturesData)
 }
-
 
 const getFeature = featureName => {
-  return databaseClient.get('features', { name: featureName })
+  return databaseClient
+    .get('features', { name: featureName })
     .then(getFeatureData)
 }
-
 
 const createFeatures = features => {
   return databaseClient
