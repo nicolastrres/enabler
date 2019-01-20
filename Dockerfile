@@ -15,6 +15,7 @@ COPY repositories       $APP/repositories
 COPY routes             $APP/routes
 COPY app.js             $APP
 COPY constants.js       $APP
+COPY platformsh.js      $APP
 
 COPY tests              $APP/tests
 COPY .eslintrc.yml       $APP
